@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  title: School Library Management System API
+  description: API for managing books in a school library
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /books:
+    get:
+      summary: Get all books
+      operationId: getAllBooks
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BookSchema"
+        "500":
+          description: Internal Server Error
+    post:
+      summary: Add a new book
+      operationId: createBook
+      requestBody:
+        description: Book object that needs to be added to the library
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookSchema"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookSchema"
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+  /books/{id}:
+    get:
+      summary: Get a book by ID
+      operationId: getBookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookSchema"
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+    delete:
+      summary: Delete a book by ID
+      operationId: deleteBookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the book to delete
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    BookSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the book
+        title:
+          type: string
+          description: The title of the book
+        author:
+          type: string
+          description: The author of the book
+        year:
+          type: integer
+          description: The year the book was published
+        ISBN:
+          type: string
+          description: The ISBN of the book
+      required:
+        - id
+        - title
+        - author
+        - year
+        - ISBN
+    CreateBookSchema:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the book
+          example: Pride and Prejudice
+        author:
+          type: string
+          description: The author of the book
+          example: Jane Austen
+        year:
+          type: integer
+          description: The year the book was published
+          example: 1813
+        ISBN:
+          type: string
+          description: The ISBN of the book
+          example: 9780141439518
+      required:
+        - title
+        - author
+        - year
+        - ISBN
